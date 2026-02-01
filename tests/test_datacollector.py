@@ -154,13 +154,15 @@ class TestDataCollector:
         try:
             psycopg2.connect(postgres_uri)
         except psycopg2.OperationalError:
-            pass 
+            pass
 
         with pytest.raises(
             ValueError,
             match="Please define a storage_uri to if to be stored not in memory",
         ):
-            model.test_dc = DataCollector(model=model, storage="postgresql", storage_uri=None)
+            model.test_dc = DataCollector(
+                model=model, storage="postgresql", storage_uri=None
+            )
 
     def test_collect(self, fix1_model):
         model = fix1_model
@@ -325,7 +327,7 @@ class TestDataCollector:
             "seed",
             "batch",
         }
-        
+
         assert collected_data["agent"]["wealth"].to_list() == [3, 4, 5, 6, 5, 6, 7, 8]
         assert collected_data["agent"]["age_ExampleAgentSet1"].to_list() == [
             10,
