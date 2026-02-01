@@ -409,10 +409,18 @@ class DataCollector(AbstractDataCollector):
         for kind, step, batch, lf in frames_to_flush:
             df = lf.collect()
             table = f"{kind}_data"
-            cols = df.columns
+
+            if kind == "model":
+                ordered_cols = ["step", "seed", "batch"] + [
+                    c for c in df.columns if c not in {"step", "seed", "batch"}
+                ]
+            else:
+                ordered_cols = df.columns
+
+            df = df.select(ordered_cols)
             values = [tuple(row) for row in df.rows()]
-            placeholders = ", ".join(["%s"] * len(cols))
-            columns = ", ".join(cols)
+            placeholders = ", ".join(["%s"] * len(ordered_cols))
+            columns = ", ".join(ordered_cols)
             cur.executemany(
                 f"INSERT INTO {self._schema}.{table} ({columns}) VALUES ({placeholders})",
                 values,
