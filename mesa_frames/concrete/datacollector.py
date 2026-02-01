@@ -190,6 +190,9 @@ class DataCollector(AbstractDataCollector):
 
         agent_data_dict: dict[str, pl.Series] = {}
 
+        for set_name, aset in self._model.sets.items():  
+            agent_data_dict[f"unique_id_{set_name}"] = aset["unique_id"]
+
         for col_name, reporter in self._agent_reporters.items():
             # 1) String or collection[str]: shorthand to fetch columns
             if isinstance(reporter, str) or _is_str_collection(reporter):
@@ -449,18 +452,20 @@ class DataCollector(AbstractDataCollector):
         - Ensures a `storage_uri` is provided if needed.
         - For PostgreSQL, validates that required tables and columns exist.
         """
-        if self._storage != "memory" and self._storage_uri == None:
+        if self._storage != "memory" and self._storage_uri is None:
             raise ValueError(
                 "Please define a storage_uri to if to be stored not in memory"
             )
 
         if self._storage == "postgresql":
-            conn = self._get_db_connection(self._storage_uri)
+            conn = None
             try:
+                conn = self._get_db_connection(self._storage_uri)
                 self._validate_postgress_table_exists(conn)
                 self._validate_postgress_columns_exists(conn)
             finally:
-                conn.close()
+                if conn:
+                    conn.close()
 
     def _validate_postgress_table_exists(self, conn: connection):
         """
@@ -556,6 +561,11 @@ class DataCollector(AbstractDataCollector):
                 return False
 
         expected_columns: set[str] = set()
+
+        if table_name == "agent_data":
+            for set_name, _ in self._model.sets.items():
+                expected_columns.add(f"unique_id_{set_name}".lower())
+
         for col_name, req in reporter.items():
             # Strings → one column per set with suffix
             if isinstance(req, str):
