@@ -190,7 +190,7 @@ class DataCollector(AbstractDataCollector):
 
         agent_data_dict: dict[str, pl.Series] = {}
 
-        for set_name, aset in self._model.sets.items():  
+        for set_name, aset in self._model.sets.items():
             agent_data_dict[f"unique_id_{set_name}"] = aset["unique_id"]
 
         for col_name, reporter in self._agent_reporters.items():
