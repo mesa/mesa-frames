@@ -56,8 +56,9 @@ class MoneyModel(Model):
             },
             storage="memory",  # we'll switch this per example
             storage_uri=None,
-            trigger=lambda m: m.steps % 2
-            == 0,  # collect every 2 steps via conditional_collect
+            trigger=lambda m: (
+                m.steps % 2 == 0
+            ),  # collect every 2 steps via conditional_collect
             reset_memory=True,
         )
 

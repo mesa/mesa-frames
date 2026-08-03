@@ -120,12 +120,14 @@ class Sugarscape(mesa.Model):
         # are comparable across backends.
         self.datacollector = DataCollector(
             model_reporters={
-                "mean_sugar": lambda m: float(np.mean([a.sugar for a in m.agent_list]))
-                if m.agent_list
-                else 0.0,
-                "total_sugar": lambda m: float(sum(a.sugar for a in m.agent_list))
-                if m.agent_list
-                else 0.0,
+                "mean_sugar": lambda m: (
+                    float(np.mean([a.sugar for a in m.agent_list]))
+                    if m.agent_list
+                    else 0.0
+                ),
+                "total_sugar": lambda m: (
+                    float(sum(a.sugar for a in m.agent_list)) if m.agent_list else 0.0
+                ),
                 "agents_alive": lambda m: float(len(m.agent_list)),
                 "gini": lambda m: gini(a.sugar for a in m.agent_list),
                 "corr_sugar_metabolism": lambda m: corr_sugar_metabolism(m),

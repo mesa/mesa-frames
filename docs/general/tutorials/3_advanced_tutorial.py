@@ -388,12 +388,12 @@ class Sugarscape(Model):
         self.datacollector = DataCollector(
             model=self,
             model_reporters={
-                "mean_sugar": lambda m: 0.0
-                if len(m.sets[0]) == 0
-                else float(m.sets[0].df["sugar"].mean()),
-                "total_sugar": lambda m: float(m.sets[0].df["sugar"].sum())
-                if len(m.sets[0])
-                else 0.0,
+                "mean_sugar": lambda m: (
+                    0.0 if len(m.sets[0]) == 0 else float(m.sets[0].df["sugar"].mean())
+                ),
+                "total_sugar": lambda m: (
+                    float(m.sets[0].df["sugar"].sum()) if len(m.sets[0]) else 0.0
+                ),
                 "agents_alive": lambda m: float(len(m.sets[0])) if len(m.sets) else 0.0,
                 "gini": gini,
                 "corr_sugar_metabolism": corr_sugar_metabolism,
