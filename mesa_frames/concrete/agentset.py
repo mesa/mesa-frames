@@ -669,6 +669,10 @@ class AgentSet(AbstractAgentSet, PolarsMixin):
 
     @property
     def index(self) -> pl.Series:
+        # A freshly created AgentSet has no columns at all (see ``__init__``),
+        # so there is no ``unique_id`` column to read yet.
+        if "unique_id" not in self._df.columns:
+            return pl.Series(name="unique_id", dtype=pl.UInt64)
         return self._df["unique_id"]
 
     @property

@@ -557,6 +557,15 @@ class Test_AgentSet:
         agents.select(agents.df["wealth"] > 2, inplace=True)
         assert all(agents.inactive_agents["unique_id"] == agents["unique_id"][0, 1])
 
+    def test_index_empty(self):
+        # A new AgentSet has no agents and therefore no unique_id column yet.
+        agents = ExampleAgentSet(Model())
+        index = agents.index
+        assert isinstance(index, pl.Series)
+        assert index.len() == 0
+        assert index.dtype == pl.UInt64
+        assert index.name == "unique_id"
+
     def test_pos(self, fix1_AgentSet_with_pos: ExampleAgentSet):
         pos = fix1_AgentSet_with_pos.pos
         assert isinstance(pos, pl.DataFrame)

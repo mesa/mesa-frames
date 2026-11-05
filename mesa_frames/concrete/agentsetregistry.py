@@ -105,7 +105,7 @@ class AgentSetRegistry(AbstractAgentSetRegistry):
                 agentset.name = name
             existing_names.add(name)
         new_ids = pl.concat(
-            [obj._ids] + [pl.Series(agentset["unique_id"]) for agentset in other_list]
+            [obj._ids] + [pl.Series(agentset.index) for agentset in other_list]
         )
         if new_ids.is_duplicated().any():
             raise ValueError("Some of the agent IDs are not unique.")
@@ -617,7 +617,7 @@ class AgentSetRegistry(AbstractAgentSetRegistry):
         Ensures `self._ids` stays a `pl.UInt64` Series and empty when no sets.
         """
         if self._agentsets:
-            cols = [pl.Series(s["unique_id"]) for s in self._agentsets]
+            cols = [pl.Series(s.index) for s in self._agentsets]
             self._ids = (
                 pl.concat(cols)
                 if cols
