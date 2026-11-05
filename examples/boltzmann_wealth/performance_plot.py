@@ -214,7 +214,7 @@ def main():
         mesa_frames_polars_concise,
         mesa_frames_polars_native,
     ]
-    n_range_0 = [k for k in range(0, 100001, 10000)]
+    n_range_0 = [*range(0, 100001, 10000)]
     title_0 = "100 steps of the Boltzmann Wealth model:\n" + " vs ".join(labels_0)
     image_path_0 = "boltzmann_with_mesa.png"
 
@@ -228,7 +228,7 @@ def main():
         mesa_frames_polars_concise,
         mesa_frames_polars_native,
     ]
-    n_range_1 = [k for k in range(100000, 1000001, 100000)]
+    n_range_1 = [*range(100000, 1000001, 100000)]
     title_1 = "100 steps of the Boltzmann Wealth model:\n" + " vs ".join(labels_1)
     image_path_1 = "boltzmann_no_mesa.png"
 

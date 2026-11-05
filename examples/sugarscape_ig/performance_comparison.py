@@ -186,7 +186,7 @@ def main():
         mesa_frames_polars_numba_parallel,
         mesa_implementation,
     ]
-    n_range_0 = [k for k in range(10**5, 5 * 10**5 + 2, 10**5)]
+    n_range_0 = [*range(10**5, 5 * 10**5 + 2, 10**5)]
     title_0 = "100 steps of the SugarScape IG model:\n" + " vs ".join(labels_0)
     image_path_0 = "mesa_comparison.png"
     plot_and_print_benchmark(labels_0, kernels_0, n_range_0, title_0, image_path_0)
@@ -207,7 +207,7 @@ def main():
         mesa_frames_polars_numba_parallel,
         mesa_frames_polars_numba_gpu,
     ]
-    n_range_1 = [k for k in range(10**6, 3 * 10**6 + 2, 10**6)]
+    n_range_1 = [*range(10**6, 3 * 10**6 + 2, 10**6)]
     title_1 = "100 steps of the SugarScape IG model:\n" + " vs ".join(labels_1)
     image_path_1 = "polars_comparison.png"
     plot_and_print_benchmark(
