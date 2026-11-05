@@ -96,6 +96,28 @@ class TestAgentSetRegistry:
         with pytest.raises(ValueError, match="agent IDs are not unique"):
             reg.add(a3)
 
+    def test_add_empty_agentset(self, fix_model: Model) -> None:
+        # An AgentSet without agents has no unique_id column yet; it must still
+        # be possible to register it (for example in ``Model.__init__``).
+        class EmptyAgentSet(AgentSet):
+            def step(self) -> None:
+                pass
+
+        reg = AgentSetRegistry(fix_model)
+        empty = EmptyAgentSet(fix_model)
+        reg.add(empty)
+        assert len(reg) == 1
+        assert empty in reg
+        assert reg.ids.len() == 0
+        # Registering a populated set next to the empty one keeps only its ids
+        populated = ExampleAgentSetA(fix_model)
+        reg.add(populated)
+        assert reg.ids.len() == len(populated)
+        # Removing the populated set rebuilds the ids with the empty set left
+        reg.remove(populated)
+        assert len(reg) == 1
+        assert reg.ids.len() == 0
+
     # Public: contains
     def test_contains(self, fix_registry_with_two: AgentSetRegistry) -> None:
         reg = fix_registry_with_two
