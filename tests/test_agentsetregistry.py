@@ -110,9 +110,10 @@ class TestAgentSetRegistry:
         assert empty in reg
         assert reg.ids.len() == 0
         # Registering a populated set next to the empty one keeps only its ids
-        populated = ExampleAgentSetA(fix_model)
+        populated = EmptyAgentSet(fix_model, name="populated")
+        populated.add({"wealth": [1, 2, 3]})
         reg.add(populated)
-        assert reg.ids.len() == len(populated)
+        assert reg.ids.len() == len(populated) == 3
         # Removing the populated set rebuilds the ids with the empty set left
         reg.remove(populated)
         assert len(reg) == 1
